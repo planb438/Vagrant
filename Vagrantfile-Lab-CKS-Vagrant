@@ -1,0 +1,18 @@
+# Vagrantfile
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "ubuntu/jammy64"
+
+  ["cp", "worker1", "worker2"].each do |hostname|
+    config.vm.define hostname do |node|
+      node.vm.hostname = hostname
+      node.vm.network "public_network", bridge: "wlo1"  # replace wlo1 with your network interface name
+      node.vm.provider "virtualbox" do |vb|
+        vb.memory = 2048
+        vb.cpus = 2
+      end
+      node.vm.provision "shell", path: "setup.sh"
+    end
+  end
+
+end
